@@ -1,0 +1,3 @@
+"""
+SigilithLabs — Structural Intelligence Framework
+"""
