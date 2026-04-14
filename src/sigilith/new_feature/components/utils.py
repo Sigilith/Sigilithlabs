@@ -7,6 +7,7 @@ def validate(data):
         raise ValueError("Input cannot be None")
     return data
 
+
 def normalize(data):
     if isinstance(data, str):
         return data.strip().lower()
