@@ -112,3 +112,30 @@ Available baseline modes:
 
 The CLI also supports a deterministic sorted baseline:
 
+
+## Package Layout
+
+Sigilith-M is currently organized into the following modules:
+
+- `src/sigilith_m/metrics.py` — core sequence metrics
+- `src/sigilith_m/drift.py` — drift calculations
+- `src/sigilith_m/baselines.py` — baseline generation and comparison
+- `src/sigilith_m/classify.py` — summary classification rules
+- `src/sigilith_m/profile.py` — canonical profile builder
+- `src/sigilith_m/export.py` — JSON-safe export helpers
+- `src/sigilith_m/io.py` — file input/output helpers
+- `src/sigilith_m/utils.py` — text normalization and tokenization
+- `src/sigilith_m/cli.py` — command-line interface
+
+## Profile Structure
+
+Sigilith-M profiles currently include:
+
+- input text
+- normalized text
+- tokens
+- metrics
+- baseline profile
+- metric deltas
+- classification
+- metadata

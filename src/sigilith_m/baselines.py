@@ -1,6 +1,10 @@
 import random
 
-from sigilith_m.drift import recurrence_drift, normalized_recurrence_drift
+from sigilith_m.drift import (
+    recurrence_drift,
+    normalized_recurrence_drift,
+    windowed_recurrence_drift,
+)
 from sigilith_m.metrics import (
     score_tokens,
     stability,
@@ -18,6 +22,7 @@ def profile_tokens(tokens):
         "transition_diversity": transition_diversity(tokens),
         "drift": recurrence_drift(tokens),
         "normalized_drift": normalized_recurrence_drift(tokens),
+        "windowed_drift": windowed_recurrence_drift(tokens, window_size=3),
     }
 
 
@@ -52,6 +57,7 @@ def compare_to_baseline(tokens, seed=42, mode="shuffle"):
         "transition_diversity_delta": base["transition_diversity"] - baseline["transition_diversity"],
         "drift_delta": base["drift"] - baseline["drift"],
         "normalized_drift_delta": base["normalized_drift"] - baseline["normalized_drift"],
+        "windowed_drift_delta": base["windowed_drift"] - baseline["windowed_drift"],
     }
 
     return {

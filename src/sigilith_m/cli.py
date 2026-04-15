@@ -1,40 +1,8 @@
 import argparse
 
 from sigilith_m.export import save_json
-from sigilith_m.baselines import compare_to_baseline
-from sigilith_m.utils import tokenize, normalize_text
 from sigilith_m.io import read_text_file
-from sigilith_m.classify import summary_label
-
-
-def build_profile_from_text(text, seed=42, baseline_mode="shuffle"):
-    normalized = normalize_text(text)
-    tokens = tokenize(text)
-    result = compare_to_baseline(tokens, seed=seed, mode=baseline_mode)
-
-    observed = result["observed"]
-    observed["normalized"] = normalized
-    observed["summary_label"] = summary_label(
-        observed["stability"],
-        observed["repetition_ratio"],
-        observed["transition_diversity"],
-    )
-
-    return {
-        "normalized": observed["normalized"],
-        "tokens": observed["tokens"],
-        "score": observed["score"],
-        "stability": observed["stability"],
-        "repetition_ratio": observed["repetition_ratio"],
-        "transition_diversity": observed["transition_diversity"],
-        "drift": observed["drift"],
-        "normalized_drift": observed["normalized_drift"],
-        "summary_label": observed["summary_label"],
-        "seed": seed,
-        "baseline_mode": baseline_mode,
-        "baseline": result["baseline"],
-        "deltas": result["deltas"],
-    }
+from sigilith_m.profile import build_profile_from_text
 
 
 def main():

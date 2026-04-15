@@ -27,7 +27,6 @@ def recurrence_drift(tokens):
 def normalized_recurrence_drift(tokens):
     """
     Normalize recurrence drift by sequence length - 1.
-    Returns a value between 0 and 1 for non-empty repeated sequences.
     """
     if len(tokens) < 2:
         return 0.0
@@ -37,3 +36,20 @@ def normalized_recurrence_drift(tokens):
     if denom <= 0:
         return 0.0
     return raw / denom
+
+
+def windowed_recurrence_drift(tokens, window_size=3):
+    """
+    Compute recurrence drift across sliding windows and return the average.
+    """
+    if len(tokens) < window_size or window_size < 2:
+        return 0.0
+
+    values = []
+    for i in range(len(tokens) - window_size + 1):
+        window = tokens[i:i + window_size]
+        values.append(recurrence_drift(window))
+
+    if not values:
+        return 0.0
+    return sum(values) / len(values)
