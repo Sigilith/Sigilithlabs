@@ -192,3 +192,25 @@ Current tests verify:
 - rejection of `None` input
 - normalization behavior
 - transition-based metric behavior
+
+## Sigilith-M CLI
+
+Sigilith-M includes a command-line interface for generating structural profiles from text input and exporting them as JSON.
+
+### Example usage
+
+```bash
+PYTHONPATH=src python -m sigilith_m.cli sample_input.txt output/profile.json
+### Current CLI output includes
+- normalized text
+- token list
+- score
+- stability
+- repetition ratio
+- transition diversity
+- summary label
+- shuffled baseline profile
+- metric deltas against baseline
+
+### Baseline comparison
+The CLI now supports comparison between an observed token profile and a shuffled baseline, allowing structural deltas to be inspected directly in exported JSON output.
