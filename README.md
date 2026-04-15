@@ -67,3 +67,13 @@ The current codebase includes:
 - sorted baseline mode
 - drift support
 - unit tests for key modules
+
+### Alternate baseline mode
+
+The CLI also supports a deterministic sorted baseline:
+
+PYTHONPATH=src python -m sigilith_m.cli sample_input.txt output/profile.json --baseline-mode sorted
+
+Available baseline modes:
+- shuffle
+- sorted
