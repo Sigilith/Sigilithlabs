@@ -1,4 +1,4 @@
-from sigilith_m.baseline import (
+from sigilith_m.baselines import (
     profile_tokens,
     shuffled_tokens,
     sorted_tokens,
