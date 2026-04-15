@@ -3,14 +3,16 @@ from pathlib import Path
 
 from sigilith_m.export import save_json
 from sigilith_m.baseline import compare_to_baseline
+from sigilith_m.utils import tokenize, normalize_text, read_text_file
 
 
 def build_profile_from_text(text, seed=42, baseline_mode="shuffle"):
-    tokens = [t for t in text.strip().lower().split() if t]
+    normalized = normalize_text(text)
+    tokens = tokenize(text)
     result = compare_to_baseline(tokens, seed=seed, mode=baseline_mode)
 
     observed = result["observed"]
-    observed["normalized"] = " ".join(tokens)
+    observed["normalized"] = normalized
     observed["summary_label"] = classify_summary(
         observed["stability"],
         observed["repetition_ratio"],
@@ -62,8 +64,7 @@ def main():
     )
     args = parser.parse_args()
 
-    input_path = Path(args.input)
-    text = input_path.read_text(encoding="utf-8")
+    text = read_text_file(args.input)
     profile = build_profile_from_text(
         text,
         seed=args.seed,
