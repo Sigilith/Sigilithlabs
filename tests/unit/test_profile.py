@@ -19,6 +19,7 @@ def test_build_profile_from_text():
     assert result["metadata"]["seed"] == 42
     assert result["metadata"]["baseline_mode"] == "shuffle"
     assert result["metadata"]["window_size"] == 3
+    assert result["metadata"]["block_size"] == 3
 
     assert "baseline" in result
     assert "deltas" in result
@@ -34,3 +35,15 @@ def test_build_profile_with_local_shuffle():
 
     assert result["metadata"]["baseline_mode"] == "local_shuffle"
     assert result["metadata"]["window_size"] == 3
+
+
+def test_build_profile_with_block_shuffle():
+    result = build_profile_from_text(
+        "a b c d e f",
+        seed=42,
+        baseline_mode="block_shuffle",
+        block_size=3,
+    )
+
+    assert result["metadata"]["baseline_mode"] == "block_shuffle"
+    assert result["metadata"]["block_size"] == 3

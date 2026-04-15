@@ -17,7 +17,7 @@ def main():
     )
     parser.add_argument(
         "--baseline-mode",
-        choices=["shuffle", "sorted", "local_shuffle"],
+        choices=["shuffle", "sorted", "local_shuffle", "block_shuffle"],
         default="shuffle",
         help="Baseline mode to compare against",
     )
@@ -27,6 +27,12 @@ def main():
         default=3,
         help="Window size for local shuffle baseline",
     )
+    parser.add_argument(
+        "--block-size",
+        type=int,
+        default=3,
+        help="Block size for block-preserving shuffle baseline",
+    )
     args = parser.parse_args()
 
     text = read_text_file(args.input)
@@ -35,6 +41,7 @@ def main():
         seed=args.seed,
         baseline_mode=args.baseline_mode,
         window_size=args.window_size,
+        block_size=args.block_size,
     )
     saved = save_json(profile, args.output)
     print(f"Saved profile to: {saved}")

@@ -52,19 +52,45 @@ def local_shuffled_tokens(tokens, window_size=3, seed=42):
     return result
 
 
-def build_baseline(tokens, mode="shuffle", seed=42, window_size=3):
+def block_preserving_shuffled_tokens(tokens, block_size=3, seed=42):
+    """
+    Split tokens into contiguous blocks, preserve each block internally,
+    but shuffle the order of the blocks.
+    """
+    if block_size < 1:
+        return list(tokens)
+
+    blocks = [tokens[i:i + block_size] for i in range(0, len(tokens), block_size)]
+    rng = random.Random(seed)
+    rng.shuffle(blocks)
+
+    result = []
+    for block in blocks:
+        result.extend(block)
+    return result
+
+
+def build_baseline(tokens, mode="shuffle", seed=42, window_size=3, block_size=3):
     if mode == "shuffle":
         return shuffled_tokens(tokens, seed=seed)
     if mode == "sorted":
         return sorted_tokens(tokens)
     if mode == "local_shuffle":
         return local_shuffled_tokens(tokens, window_size=window_size, seed=seed)
+    if mode == "block_shuffle":
+        return block_preserving_shuffled_tokens(tokens, block_size=block_size, seed=seed)
     raise ValueError(f"Unknown baseline mode: {mode}")
 
 
-def compare_to_baseline(tokens, seed=42, mode="shuffle", window_size=3):
+def compare_to_baseline(tokens, seed=42, mode="shuffle", window_size=3, block_size=3):
     base = profile_tokens(tokens)
-    baseline_tokens = build_baseline(tokens, mode=mode, seed=seed, window_size=window_size)
+    baseline_tokens = build_baseline(
+        tokens,
+        mode=mode,
+        seed=seed,
+        window_size=window_size,
+        block_size=block_size,
+    )
     baseline = profile_tokens(baseline_tokens)
 
     deltas = {

@@ -5,11 +5,23 @@ from sigilith_m.classify import summary_label
 from sigilith_m.utils import normalize_text, tokenize
 
 
-def build_profile_from_text(text, seed=42, baseline_mode="shuffle", window_size=3):
+def build_profile_from_text(
+    text,
+    seed=42,
+    baseline_mode="shuffle",
+    window_size=3,
+    block_size=3,
+):
     normalized = normalize_text(text)
     tokens = tokenize(text)
 
-    result = compare_to_baseline(tokens, seed=seed, mode=baseline_mode, window_size=window_size)
+    result = compare_to_baseline(
+        tokens,
+        seed=seed,
+        mode=baseline_mode,
+        window_size=window_size,
+        block_size=block_size,
+    )
     observed = result["observed"]
 
     metrics = {
@@ -34,6 +46,7 @@ def build_profile_from_text(text, seed=42, baseline_mode="shuffle", window_size=
         "seed": seed,
         "baseline_mode": baseline_mode,
         "window_size": window_size,
+        "block_size": block_size,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
