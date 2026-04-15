@@ -5,8 +5,10 @@ Implements a simple structural processing pipeline:
 2. normalize input
 3. extract structural tokens
 4. compute a basic structural score
+5. compute a stability score
 """
 
+from collections import Counter
 from .utils import normalize, validate
 
 
@@ -19,10 +21,12 @@ class CoreEngine:
         normalized = normalize(validated)
         tokens = self.extract_tokens(normalized)
         score = self.compute_score(tokens)
+        stability = self.compute_stability(tokens)
         return {
             "normalized": normalized,
             "tokens": tokens,
             "score": score,
+            "stability": stability,
         }
 
     def extract_tokens(self, text):
@@ -36,3 +40,15 @@ class CoreEngine:
         unique = len(set(tokens))
         total = len(tokens)
         return total + unique
+
+    def compute_stability(self, tokens):
+        """
+        Stability = frequency of the most common token divided by total tokens.
+        Returns a value between 0 and 1.
+        Higher = more locally repetitive / stable.
+        """
+        if not tokens:
+            return 0.0
+        counts = Counter(tokens)
+        most_common = counts.most_common(1)[0][1]
+        return most_common / len(tokens)
