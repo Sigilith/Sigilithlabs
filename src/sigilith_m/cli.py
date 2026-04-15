@@ -2,50 +2,42 @@ import argparse
 from pathlib import Path
 
 from sigilith_m.export import save_json
+from sigilith_m.baseline import compare_to_baseline
 
 
 def build_profile_from_text(text):
     tokens = [t for t in text.strip().lower().split() if t]
+    result = compare_to_baseline(tokens)
 
-    total = len(tokens)
-    unique = len(set(tokens))
-    score = total + unique if total else 0
-
-    if total:
-        counts = {}
-        for token in tokens:
-            counts[token] = counts.get(token, 0) + 1
-        most_common = max(counts.values())
-        stability = most_common / total
-        repetition_ratio = (total - unique) / total
-    else:
-        stability = 0.0
-        repetition_ratio = 0.0
-
-    if total >= 2:
-        transitions = list(zip(tokens, tokens[1:]))
-        transition_diversity = len(set(transitions)) / len(transitions)
-    else:
-        transition_diversity = 0.0
-
-    if stability >= 0.7 and repetition_ratio >= 0.4:
-        summary_label = "high_repetition_stable"
-    elif transition_diversity >= 0.8 and stability < 0.7:
-        summary_label = "high_transition_variability"
-    elif stability >= 0.4 and transition_diversity >= 0.4:
-        summary_label = "balanced_structure"
-    else:
-        summary_label = "low_structure"
+    observed = result["observed"]
+    observed["normalized"] = " ".join(tokens)
+    observed["summary_label"] = classify_summary(
+        observed["stability"],
+        observed["repetition_ratio"],
+        observed["transition_diversity"],
+    )
 
     return {
-        "normalized": " ".join(tokens),
-        "tokens": tokens,
-        "score": score,
-        "stability": stability,
-        "repetition_ratio": repetition_ratio,
-        "transition_diversity": transition_diversity,
-        "summary_label": summary_label,
+        "normalized": observed["normalized"],
+        "tokens": observed["tokens"],
+        "score": observed["score"],
+        "stability": observed["stability"],
+        "repetition_ratio": observed["repetition_ratio"],
+        "transition_diversity": observed["transition_diversity"],
+        "summary_label": observed["summary_label"],
+        "baseline": result["baseline"],
+        "deltas": result["deltas"],
     }
+
+
+def classify_summary(stability, repetition_ratio, transition_diversity):
+    if stability >= 0.7 and repetition_ratio >= 0.4:
+        return "high_repetition_stable"
+    if transition_diversity >= 0.8 and stability < 0.7:
+        return "high_transition_variability"
+    if stability >= 0.4 and transition_diversity >= 0.4:
+        return "balanced_structure"
+    return "low_structure"
 
 
 def main():
