@@ -10,6 +10,7 @@ def test_core_engine_process_structure():
     assert result["tokens"] == ["hello", "world", "hello"]
     assert result["score"] == 5
     assert result["stability"] == 2 / 3
+    assert result["repetition_ratio"] == 1 / 3
 
 
 def test_core_engine_rejects_none():
