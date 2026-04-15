@@ -1,41 +1,23 @@
-from collections import Counter
 import random
 
 from sigilith_m.drift import recurrence_drift, normalized_recurrence_drift
+from sigilith_m.metrics import (
+    score_tokens,
+    stability,
+    repetition_ratio,
+    transition_diversity,
+)
 
 
 def profile_tokens(tokens):
-    total = len(tokens)
-    unique = len(set(tokens))
-
-    score = total + unique if total else 0
-
-    if total:
-        counts = Counter(tokens)
-        most_common = counts.most_common(1)[0][1]
-        stability = most_common / total
-        repetition_ratio = (total - unique) / total
-    else:
-        stability = 0.0
-        repetition_ratio = 0.0
-
-    if total >= 2:
-        transitions = list(zip(tokens, tokens[1:]))
-        transition_diversity = len(set(transitions)) / len(transitions)
-    else:
-        transition_diversity = 0.0
-
-    drift = recurrence_drift(tokens)
-    normalized_drift = normalized_recurrence_drift(tokens)
-
     return {
         "tokens": tokens,
-        "score": score,
-        "stability": stability,
-        "repetition_ratio": repetition_ratio,
-        "transition_diversity": transition_diversity,
-        "drift": drift,
-        "normalized_drift": normalized_drift,
+        "score": score_tokens(tokens),
+        "stability": stability(tokens),
+        "repetition_ratio": repetition_ratio(tokens),
+        "transition_diversity": transition_diversity(tokens),
+        "drift": recurrence_drift(tokens),
+        "normalized_drift": normalized_recurrence_drift(tokens),
     }
 
 

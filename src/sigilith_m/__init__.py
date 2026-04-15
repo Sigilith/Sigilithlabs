@@ -1,6 +1,7 @@
 from .baselines import profile_tokens, compare_to_baseline
 from .drift import recurrence_drift, normalized_recurrence_drift
 from .export import to_dict, save_json
+from .metrics import score_tokens, stability, repetition_ratio, transition_diversity
 
 __all__ = [
     "profile_tokens",
@@ -9,4 +10,8 @@ __all__ = [
     "normalized_recurrence_drift",
     "to_dict",
     "save_json",
+    "score_tokens",
+    "stability",
+    "repetition_ratio",
+    "transition_diversity",
 ]
