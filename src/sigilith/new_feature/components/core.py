@@ -8,6 +8,7 @@ Implements a simple structural processing pipeline:
 5. compute a stability score
 6. compute a repetition ratio
 7. compute transition diversity
+8. assign a summary label
 """
 
 from collections import Counter
@@ -26,6 +27,11 @@ class CoreEngine:
         stability = self.compute_stability(tokens)
         repetition_ratio = self.compute_repetition_ratio(tokens)
         transition_diversity = self.compute_transition_diversity(tokens)
+        summary_label = self.compute_summary_label(
+            stability=stability,
+            repetition_ratio=repetition_ratio,
+            transition_diversity=transition_diversity,
+        )
         return {
             "normalized": normalized,
             "tokens": tokens,
@@ -33,6 +39,7 @@ class CoreEngine:
             "stability": stability,
             "repetition_ratio": repetition_ratio,
             "transition_diversity": transition_diversity,
+            "summary_label": summary_label,
         }
 
     def extract_tokens(self, text):
@@ -73,7 +80,6 @@ class CoreEngine:
         """
         Transition diversity = unique adjacent transitions / total adjacent transitions.
         Returns a value between 0 and 1.
-        Higher = more transition variety.
         """
         if len(tokens) < 2:
             return 0.0
@@ -81,3 +87,15 @@ class CoreEngine:
         total = len(transitions)
         unique = len(set(transitions))
         return unique / total
+
+    def compute_summary_label(self, stability, repetition_ratio, transition_diversity):
+        """
+        Simple summary classifier for the feature.
+        """
+        if stability >= 0.7 and repetition_ratio >= 0.4:
+            return "high_repetition_stable"
+        if transition_diversity >= 0.8 and stability < 0.7:
+            return "high_transition_variability"
+        if stability >= 0.4 and transition_diversity >= 0.4:
+            return "balanced_structure"
+        return "low_structure"
