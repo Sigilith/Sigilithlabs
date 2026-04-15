@@ -7,6 +7,7 @@ Implements a simple structural processing pipeline:
 4. compute a basic structural score
 5. compute a stability score
 6. compute a repetition ratio
+7. compute transition diversity
 """
 
 from collections import Counter
@@ -24,12 +25,14 @@ class CoreEngine:
         score = self.compute_score(tokens)
         stability = self.compute_stability(tokens)
         repetition_ratio = self.compute_repetition_ratio(tokens)
+        transition_diversity = self.compute_transition_diversity(tokens)
         return {
             "normalized": normalized,
             "tokens": tokens,
             "score": score,
             "stability": stability,
             "repetition_ratio": repetition_ratio,
+            "transition_diversity": transition_diversity,
         }
 
     def extract_tokens(self, text):
@@ -58,8 +61,6 @@ class CoreEngine:
     def compute_repetition_ratio(self, tokens):
         """
         Repetition ratio = repeated tokens / total tokens.
-        Example:
-        ['a', 'b', 'a'] -> 1 repeated token out of 3 total = 0.333...
         """
         if not tokens:
             return 0.0
@@ -67,3 +68,16 @@ class CoreEngine:
         unique = len(set(tokens))
         repeated = total - unique
         return repeated / total
+
+    def compute_transition_diversity(self, tokens):
+        """
+        Transition diversity = unique adjacent transitions / total adjacent transitions.
+        Returns a value between 0 and 1.
+        Higher = more transition variety.
+        """
+        if len(tokens) < 2:
+            return 0.0
+        transitions = [(a, b) for a, b in zip(tokens, tokens[1:])]
+        total = len(transitions)
+        unique = len(set(transitions))
+        return unique / total
