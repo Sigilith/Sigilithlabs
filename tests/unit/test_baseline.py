@@ -8,6 +8,8 @@ def test_profile_tokens_basic():
     assert result["stability"] == 2 / 3
     assert result["repetition_ratio"] == 1 / 3
     assert result["transition_diversity"] == 1.0
+    assert result["drift"] == 2.0
+    assert result["normalized_drift"] == 1.0
 
 
 def test_shuffled_tokens_preserves_members():
@@ -29,3 +31,5 @@ def test_compare_to_baseline_structure():
     assert "stability_delta" in result["deltas"]
     assert "repetition_ratio_delta" in result["deltas"]
     assert "transition_diversity_delta" in result["deltas"]
+    assert "drift_delta" in result["deltas"]
+    assert "normalized_drift_delta" in result["deltas"]

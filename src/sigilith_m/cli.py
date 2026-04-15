@@ -24,6 +24,8 @@ def build_profile_from_text(text):
         "stability": observed["stability"],
         "repetition_ratio": observed["repetition_ratio"],
         "transition_diversity": observed["transition_diversity"],
+        "drift": observed["drift"],
+        "normalized_drift": observed["normalized_drift"],
         "summary_label": observed["summary_label"],
         "baseline": result["baseline"],
         "deltas": result["deltas"],

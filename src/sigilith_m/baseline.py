@@ -1,6 +1,8 @@
 from collections import Counter
 import random
 
+from sigilith_m.drift import recurrence_drift, normalized_recurrence_drift
+
 
 def profile_tokens(tokens):
     total = len(tokens)
@@ -23,12 +25,17 @@ def profile_tokens(tokens):
     else:
         transition_diversity = 0.0
 
+    drift = recurrence_drift(tokens)
+    normalized_drift = normalized_recurrence_drift(tokens)
+
     return {
         "tokens": tokens,
         "score": score,
         "stability": stability,
         "repetition_ratio": repetition_ratio,
         "transition_diversity": transition_diversity,
+        "drift": drift,
+        "normalized_drift": normalized_drift,
     }
 
 
@@ -49,6 +56,8 @@ def compare_to_baseline(tokens, seed=42):
         "stability_delta": base["stability"] - baseline["stability"],
         "repetition_ratio_delta": base["repetition_ratio"] - baseline["repetition_ratio"],
         "transition_diversity_delta": base["transition_diversity"] - baseline["transition_diversity"],
+        "drift_delta": base["drift"] - baseline["drift"],
+        "normalized_drift_delta": base["normalized_drift"] - baseline["normalized_drift"],
     }
 
     return {
