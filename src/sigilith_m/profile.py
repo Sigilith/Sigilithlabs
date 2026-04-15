@@ -40,6 +40,7 @@ def build_profile_from_text(
             metrics["stability"],
             metrics["repetition_ratio"],
             metrics["transition_diversity"],
+            metrics["stability_index"],
         )
     }
 
