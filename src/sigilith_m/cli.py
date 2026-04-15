@@ -2,7 +2,8 @@ import argparse
 
 from sigilith_m.export import save_json
 from sigilith_m.baselines import compare_to_baseline
-from sigilith_m.utils import tokenize, normalize_text, read_text_file
+from sigilith_m.utils import tokenize, normalize_text
+from sigilith_m.io import read_text_file
 from sigilith_m.classify import summary_label
 
 
