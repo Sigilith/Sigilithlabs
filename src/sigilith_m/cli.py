@@ -5,9 +5,9 @@ from sigilith_m.export import save_json
 from sigilith_m.baseline import compare_to_baseline
 
 
-def build_profile_from_text(text):
+def build_profile_from_text(text, seed=42):
     tokens = [t for t in text.strip().lower().split() if t]
-    result = compare_to_baseline(tokens)
+    result = compare_to_baseline(tokens, seed=seed)
 
     observed = result["observed"]
     observed["normalized"] = " ".join(tokens)
@@ -27,6 +27,7 @@ def build_profile_from_text(text):
         "drift": observed["drift"],
         "normalized_drift": observed["normalized_drift"],
         "summary_label": observed["summary_label"],
+        "seed": seed,
         "baseline": result["baseline"],
         "deltas": result["deltas"],
     }
@@ -46,11 +47,17 @@ def main():
     parser = argparse.ArgumentParser(description="Sigilith-M CLI")
     parser.add_argument("input", help="Path to input text file")
     parser.add_argument("output", help="Path to output JSON file")
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Random seed for shuffled baseline comparison",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
     text = input_path.read_text(encoding="utf-8")
-    profile = build_profile_from_text(text)
+    profile = build_profile_from_text(text, seed=args.seed)
     saved = save_json(profile, args.output)
     print(f"Saved profile to: {saved}")
 

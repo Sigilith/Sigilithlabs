@@ -2,7 +2,7 @@ from sigilith_m.cli import build_profile_from_text
 
 
 def test_build_profile_from_text():
-    result = build_profile_from_text("HELLO world hello")
+    result = build_profile_from_text("HELLO world hello", seed=42)
 
     assert result["normalized"] == "hello world hello"
     assert result["tokens"] == ["hello", "world", "hello"]
@@ -13,6 +13,7 @@ def test_build_profile_from_text():
     assert result["drift"] == 2.0
     assert result["normalized_drift"] == 1.0
     assert result["summary_label"] == "high_transition_variability"
+    assert result["seed"] == 42
 
     assert "baseline" in result
     assert "deltas" in result
