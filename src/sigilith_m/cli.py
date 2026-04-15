@@ -1,9 +1,9 @@
 import argparse
-from pathlib import Path
 
 from sigilith_m.export import save_json
 from sigilith_m.baselines import compare_to_baseline
 from sigilith_m.utils import tokenize, normalize_text, read_text_file
+from sigilith_m.classify import summary_label
 
 
 def build_profile_from_text(text, seed=42, baseline_mode="shuffle"):
@@ -13,7 +13,7 @@ def build_profile_from_text(text, seed=42, baseline_mode="shuffle"):
 
     observed = result["observed"]
     observed["normalized"] = normalized
-    observed["summary_label"] = classify_summary(
+    observed["summary_label"] = summary_label(
         observed["stability"],
         observed["repetition_ratio"],
         observed["transition_diversity"],
@@ -34,16 +34,6 @@ def build_profile_from_text(text, seed=42, baseline_mode="shuffle"):
         "baseline": result["baseline"],
         "deltas": result["deltas"],
     }
-
-
-def classify_summary(stability, repetition_ratio, transition_diversity):
-    if stability >= 0.7 and repetition_ratio >= 0.4:
-        return "high_repetition_stable"
-    if transition_diversity >= 0.8 and stability < 0.7:
-        return "high_transition_variability"
-    if stability >= 0.4 and transition_diversity >= 0.4:
-        return "balanced_structure"
-    return "low_structure"
 
 
 def main():
