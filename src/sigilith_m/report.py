@@ -45,7 +45,7 @@ def generate_comparison_report(payload):
     comparison = payload.get("comparison", {})
     metadata = payload.get("metadata", {})
 
-    parts = [
+    sections = [
         "# Sigilith-M Comparative Report",
         "",
         "## Metadata",
@@ -63,4 +63,4 @@ def generate_comparison_report(payload):
         "",
     ]
 
-    return "\n".join(parts)
+    return "\n".join(sections)
