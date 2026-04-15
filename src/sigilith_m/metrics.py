@@ -44,3 +44,27 @@ def transition_diversity(tokens):
         return 0.0
     transitions = list(zip(tokens, tokens[1:]))
     return len(set(transitions)) / len(transitions)
+
+
+def stability_index(stability_value, repetition_ratio_value, transition_diversity_value, normalized_drift_value):
+    """
+    Composite stability index in [0, 1].
+
+    Higher means:
+    - stronger dominant structure
+    - more repetition
+    - lower transition diversity
+    - lower drift
+    """
+    value = (
+        0.35 * stability_value
+        + 0.25 * repetition_ratio_value
+        + 0.20 * (1.0 - transition_diversity_value)
+        + 0.20 * (1.0 - normalized_drift_value)
+    )
+
+    if value < 0.0:
+        return 0.0
+    if value > 1.0:
+        return 1.0
+    return value

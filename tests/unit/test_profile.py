@@ -14,6 +14,7 @@ def test_build_profile_from_text():
     assert result["metrics"]["drift"] == 2.0
     assert result["metrics"]["normalized_drift"] == 1.0
     assert "windowed_drift" in result["metrics"]
+    assert "stability_index" in result["metrics"]
 
     assert result["classification"]["summary_label"] == "high_transition_variability"
     assert result["metadata"]["seed"] == 42

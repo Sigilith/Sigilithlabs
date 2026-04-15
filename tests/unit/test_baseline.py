@@ -3,6 +3,7 @@ from sigilith_m.baselines import (
     shuffled_tokens,
     sorted_tokens,
     local_shuffled_tokens,
+    block_preserving_shuffled_tokens,
     compare_to_baseline,
 )
 
@@ -16,6 +17,7 @@ def test_profile_tokens_basic():
     assert result["transition_diversity"] == 1.0
     assert result["drift"] == 2.0
     assert result["normalized_drift"] == 1.0
+    assert "stability_index" in result
 
 
 def test_shuffled_tokens_preserves_members():
@@ -41,6 +43,15 @@ def test_local_shuffled_tokens_preserves_members():
     assert len(result) == len(tokens)
 
 
+def test_block_preserving_shuffled_tokens_preserves_blocks():
+    tokens = ["a", "b", "c", "d", "e", "f"]
+    result = block_preserving_shuffled_tokens(tokens, block_size=3, seed=42)
+
+    assert len(result) == len(tokens)
+    assert sorted(result) == sorted(tokens)
+    assert result in (["a", "b", "c", "d", "e", "f"], ["d", "e", "f", "a", "b", "c"])
+
+
 def test_compare_to_baseline_structure():
     result = compare_to_baseline(["a", "b", "a", "c"], seed=42, mode="shuffle")
 
@@ -48,6 +59,7 @@ def test_compare_to_baseline_structure():
     assert "baseline" in result
     assert "deltas" in result
     assert result["baseline_mode"] == "shuffle"
+    assert "stability_index_delta" in result["deltas"]
 
 
 def test_compare_to_sorted_baseline():
@@ -66,4 +78,16 @@ def test_compare_to_local_shuffle_baseline():
     )
 
     assert result["baseline_mode"] == "local_shuffle"
+    assert sorted(result["baseline"]["tokens"]) == ["a", "b", "c", "d", "e", "f"]
+
+
+def test_compare_to_block_shuffle_baseline():
+    result = compare_to_baseline(
+        ["a", "b", "c", "d", "e", "f"],
+        mode="block_shuffle",
+        seed=42,
+        block_size=3,
+    )
+
+    assert result["baseline_mode"] == "block_shuffle"
     assert sorted(result["baseline"]["tokens"]) == ["a", "b", "c", "d", "e", "f"]

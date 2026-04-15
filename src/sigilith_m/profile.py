@@ -32,6 +32,7 @@ def build_profile_from_text(
         "drift": observed["drift"],
         "normalized_drift": observed["normalized_drift"],
         "windowed_drift": observed["windowed_drift"],
+        "stability_index": observed["stability_index"],
     }
 
     classification = {

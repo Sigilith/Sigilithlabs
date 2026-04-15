@@ -10,19 +10,34 @@ from sigilith_m.metrics import (
     stability,
     repetition_ratio,
     transition_diversity,
+    stability_index,
 )
 
 
 def profile_tokens(tokens):
+    score = score_tokens(tokens)
+    stability_value = stability(tokens)
+    repetition_ratio_value = repetition_ratio(tokens)
+    transition_diversity_value = transition_diversity(tokens)
+    drift = recurrence_drift(tokens)
+    normalized_drift = normalized_recurrence_drift(tokens)
+    windowed_drift = windowed_recurrence_drift(tokens, window_size=3)
+
     return {
         "tokens": tokens,
-        "score": score_tokens(tokens),
-        "stability": stability(tokens),
-        "repetition_ratio": repetition_ratio(tokens),
-        "transition_diversity": transition_diversity(tokens),
-        "drift": recurrence_drift(tokens),
-        "normalized_drift": normalized_recurrence_drift(tokens),
-        "windowed_drift": windowed_recurrence_drift(tokens, window_size=3),
+        "score": score,
+        "stability": stability_value,
+        "repetition_ratio": repetition_ratio_value,
+        "transition_diversity": transition_diversity_value,
+        "drift": drift,
+        "normalized_drift": normalized_drift,
+        "windowed_drift": windowed_drift,
+        "stability_index": stability_index(
+            stability_value,
+            repetition_ratio_value,
+            transition_diversity_value,
+            normalized_drift,
+        ),
     }
 
 
@@ -101,6 +116,7 @@ def compare_to_baseline(tokens, seed=42, mode="shuffle", window_size=3, block_si
         "drift_delta": base["drift"] - baseline["drift"],
         "normalized_drift_delta": base["normalized_drift"] - baseline["normalized_drift"],
         "windowed_drift_delta": base["windowed_drift"] - baseline["windowed_drift"],
+        "stability_index_delta": base["stability_index"] - baseline["stability_index"],
     }
 
     return {
