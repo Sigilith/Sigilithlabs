@@ -159,3 +159,36 @@ Current tests verify:
 - rejection of `None` input
 - normalization behavior
 - transition-based metric behavior
+## New Feature Module
+
+A new structural processing feature has been added to the Sigilith codebase.
+
+### Current capabilities
+- input validation
+- normalization
+- structural token extraction
+- score metric
+- stability metric
+- repetition ratio metric
+- transition diversity metric
+- summary label classification
+
+### Output fields
+The feature currently returns:
+- `normalized`
+- `tokens`
+- `score`
+- `stability`
+- `repetition_ratio`
+- `transition_diversity`
+- `summary_label`
+
+### Status
+This module is implemented, tested, and merged into `main`.
+
+### Test coverage
+Current tests verify:
+- valid structural processing
+- rejection of `None` input
+- normalization behavior
+- transition-based metric behavior
