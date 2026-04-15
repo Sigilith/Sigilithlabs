@@ -13,13 +13,19 @@ def main():
         "--seed",
         type=int,
         default=42,
-        help="Random seed for shuffled baseline comparison",
+        help="Random seed for baseline comparison",
     )
     parser.add_argument(
         "--baseline-mode",
-        choices=["shuffle", "sorted"],
+        choices=["shuffle", "sorted", "local_shuffle"],
         default="shuffle",
         help="Baseline mode to compare against",
+    )
+    parser.add_argument(
+        "--window-size",
+        type=int,
+        default=3,
+        help="Window size for local shuffle baseline",
     )
     args = parser.parse_args()
 
@@ -28,6 +34,7 @@ def main():
         text,
         seed=args.seed,
         baseline_mode=args.baseline_mode,
+        window_size=args.window_size,
     )
     saved = save_json(profile, args.output)
     print(f"Saved profile to: {saved}")
