@@ -1,135 +1,36 @@
 # Sigilithlabs
 
-Sigilithlabs is a structural analysis codebase for symbolic systems, sequence behaviour, and reproducible metric-based experimentation.
+Sigilithlabs contains Sigilith-M, a structural analysis engine for symbolic sequences and comparative profile generation.
 
-## Current components
+## What Sigilith-M does
 
-### New Feature Module
-A structural processing feature has been added to the codebase.
+Sigilith-M builds structured profiles from symbolic or tokenized input and supports:
 
-Current capabilities:
-- input validation
-- normalization
-- structural token extraction
-- score metric
-- stability metric
-- repetition ratio metric
-- transition diversity metric
-- summary label classification
-
-Current output fields:
-- normalized
-- tokens
-- score
-- stability
-- repetition_ratio
-- transition_diversity
-- summary_label
-
-### Sigilith-M export support
-Sigilith-M now supports JSON export for structural profiles.
-
-### Sigilith-M CLI
-Sigilith-M includes a command-line interface for generating structural profiles from text input and exporting them as JSON.
-
-Example usage:
-
-PYTHONPATH=src python -m sigilith_m.cli sample_input.txt output/profile.json
-
-Current CLI output includes:
-- normalized text
-- token list
-- score
-- stability
-- repetition ratio
-- transition diversity
-- drift
-- normalized drift
-- summary label
-- shuffled baseline profile
-- metric deltas against baseline
-
-### Alternate baseline mode
-The CLI also supports a deterministic sorted baseline:
-
-PYTHONPATH=src python -m sigilith_m.cli sample_input.txt output/profile.json --baseline-mode sorted
-
-Available baseline modes:
-- shuffle
-- sorted
-
-## Status
-The current codebase includes:
-- tested feature modules
-- JSON export support
-- CLI profile generation
+- profile generation
 - baseline comparison
-- sorted baseline mode
-- drift support
-- unit tests for key modules
+- drift analysis
+- stability scoring
+- profile-to-profile comparison
+- JSON export
+- Markdown comparative reports
 
-### Alternate baseline mode
+## Package layout
 
-The CLI also supports a deterministic sorted baseline:
+- `src/sigilith_m/metrics.py` - core sequence metrics
+- `src/sigilith_m/drift.py` - drift and windowed drift
+- `src/sigilith_m/baselines.py` - baseline families and observed-vs-baseline comparison
+- `src/sigilith_m/classify.py` - summary classification rules
+- `src/sigilith_m/profile.py` - canonical profile builder
+- `src/sigilith_m/compare.py` - profile comparison engine
+- `src/sigilith_m/report.py` - Markdown report generation
+- `src/sigilith_m/export.py` - JSON-safe export helpers
+- `src/sigilith_m/io.py` - file input/output helpers
+- `src/sigilith_m/utils.py` - normalization and tokenization
+- `src/sigilith_m/cli.py` - command-line interface
 
-PYTHONPATH=src python -m sigilith_m.cli sample_input.txt output/profile.json --baseline-mode sorted
+## Profile structure
 
-Available baseline modes:
-- shuffle
-- sorted
-
-### Alternate baseline mode
-
-The CLI also supports a deterministic sorted baseline:
-
-PYTHONPATH=src python -m sigilith_m.cli sample_input.txt output/profile.json --baseline-mode sorted
-
-Available baseline modes:
-- shuffle
-- sorted
-
-### Alternate baseline mode
-
-The CLI also supports a deterministic sorted baseline:
-
-PYTHONPATH=src python -m sigilith_m.cli sample_input.txt output/profile.json --baseline-mode sorted
-
-Available baseline modes:
-- shuffle
-- sorted
-
-### Alternate baseline mode
-
-The CLI also supports a deterministic sorted baseline:
-
-PYTHONPATH=src python -m sigilith_m.cli sample_input.txt output/profile.json --baseline-mode sorted
-
-Available baseline modes:
-- shuffle
-- sorted
-
-### Alternate baseline mode
-
-The CLI also supports a deterministic sorted baseline:
-
-
-## Package Layout
-
-Sigilith-M is currently organized into the following modules:
-
-- `src/sigilith_m/metrics.py` — core sequence metrics
-- `src/sigilith_m/drift.py` — drift calculations
-- `src/sigilith_m/baselines.py` — baseline generation and comparison
-- `src/sigilith_m/classify.py` — summary classification rules
-- `src/sigilith_m/profile.py` — canonical profile builder
-- `src/sigilith_m/export.py` — JSON-safe export helpers
-- `src/sigilith_m/io.py` — file input/output helpers
-- `src/sigilith_m/utils.py` — text normalization and tokenization
-- `src/sigilith_m/cli.py` — command-line interface
-
-## Profile Structure
-
-Sigilith-M profiles currently include:
+A Sigilith-M profile includes:
 
 - input text
 - normalized text
@@ -139,3 +40,88 @@ Sigilith-M profiles currently include:
 - metric deltas
 - classification
 - metadata
+
+## Current metrics
+
+Sigilith-M currently computes:
+
+- score
+- stability
+- repetition ratio
+- transition diversity
+- drift
+- normalized drift
+- windowed drift
+- stability index
+
+## Baseline modes
+
+Available baseline modes:
+
+- `shuffle`
+- `sorted`
+- `local_shuffle`
+- `block_shuffle`
+
+## CLI usage
+
+### Build a profile
+
+PYTHONPATH=src python -m sigilith_m.cli profile input.txt output/profile.json
+
+### Compare two inputs
+
+PYTHONPATH=src python -m sigilith_m.cli compare input_a.txt input_b.txt output/compare.json
+
+### Generate a Markdown report
+
+PYTHONPATH=src python -m sigilith_m.cli report input_a.txt input_b.txt output/report.md
+
+## CLI options
+
+Common options:
+
+- `--seed` - random seed for baseline generation
+- `--baseline-mode` - choose baseline family
+- `--window-size` - window size for local shuffle and windowed drift contexts
+- `--block-size` - block size for block-preserving shuffle
+
+Example:
+
+PYTHONPATH=src python -m sigilith_m.cli report input_a.txt input_b.txt output/report.md --baseline-mode block_shuffle --block-size 4 --seed 7
+
+## Comparison outputs
+
+Sigilith-M comparative outputs currently include:
+
+- Euclidean distance
+- cosine similarity
+- metric deltas across all tracked profile metrics
+
+## Report generation
+
+Sigilith-M can generate Markdown comparative reports containing:
+
+- profile metadata
+- profile metric tables
+- comparison summary
+- metric delta table
+
+## Testing
+
+Run the test suite with:
+
+PYTHONPATH=src python -m pytest -v tests/unit
+
+## Status
+
+Current state of the engine:
+
+- modular package structure
+- canonical profile builder
+- comparative engine
+- multiple baseline families
+- report generator
+- CLI commands for profile, compare, and report
+- passing unit tests
+
