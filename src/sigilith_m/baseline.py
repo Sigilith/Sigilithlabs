@@ -46,10 +46,22 @@ def shuffled_tokens(tokens, seed=42):
     return result
 
 
-def compare_to_baseline(tokens, seed=42):
+def sorted_tokens(tokens):
+    return sorted(tokens)
+
+
+def build_baseline(tokens, mode="shuffle", seed=42):
+    if mode == "shuffle":
+        return shuffled_tokens(tokens, seed=seed)
+    if mode == "sorted":
+        return sorted_tokens(tokens)
+    raise ValueError(f"Unknown baseline mode: {mode}")
+
+
+def compare_to_baseline(tokens, seed=42, mode="shuffle"):
     base = profile_tokens(tokens)
-    shuffled = shuffled_tokens(tokens, seed=seed)
-    baseline = profile_tokens(shuffled)
+    baseline_tokens = build_baseline(tokens, mode=mode, seed=seed)
+    baseline = profile_tokens(baseline_tokens)
 
     deltas = {
         "score_delta": base["score"] - baseline["score"],
@@ -63,5 +75,6 @@ def compare_to_baseline(tokens, seed=42):
     return {
         "observed": base,
         "baseline": baseline,
+        "baseline_mode": mode,
         "deltas": deltas,
     }
